@@ -3,15 +3,9 @@ class ForwardIndex:
 	The forward index is a set of dictionaries of the form:
 
 	fi_dict_1 = {
-		blog_0000001: wordID <HitList>,
-		blog_0000001: wordID <HitList>,
-		blog_0000001: wordID <HitList>,
-		.
-		.
-		.
-		blog_0000002: wordID <HitList>,
-		blog_0000002: wordID <HitList>,
-		blog_0000002: wordID <HitList>,
+		blog_0000001: [wordID <HitList>, wordID <HitList>, wordID <HitList>]
+		blog_0000002: [wordID <HitList>, wordID <HitList>, wordID <HitList>]
+		blog_0000003: [wordID <HitList>, wordID <HitList>, wordID <HitList>]
 		.
 		.
 		.
