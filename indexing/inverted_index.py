@@ -10,8 +10,27 @@ class InvertedIndex:
 		.
 	}
 
+	The InvertedIndex class handles the storage/inverted_index_barrels folder.
+	In the storage/inverted_index_barrels/temp folder the new inverted indexes
+	are added. There will be duplicates here as multiple threads will be adding
+	inverted indexes here. So the files might look like:
+		word_id_1_1000_1
+		word_id_1_1000_2
+		word_id_1_1000_3
+		word_id_1001_2000_1
+		word_id_1001_2000_2
+		word_id_1001_2000_3
+		.
+		.
+		.
 
-
+	These will be merged and saved in the main folder where the files will 
+	look like:
+		word_id_1_1000
+		word_id_1001_2000
+		.
+		.
+		.
 
 	"""
 
