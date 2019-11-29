@@ -8,6 +8,7 @@ DATASET_PATH = os.path.join(PROJECT_PATH, "dataset")
 STORAGE_PATH = os.path.join(PROJECT_PATH, "storage")
 LEXICON_PATH = os.path.join(PROJECT_PATH, "storage/lexicon/lexicon")
 FORWARD_INDEX_BARRELS_PATH = os.path.join(PROJECT_PATH, "storage/forward_index_barrels")
+INVERTED_INDEX_BARRELS_TEMP_PATH = os.path.join(PROJECT_PATH, "storage/inverted_index_barrels/temp")
 INVERTED_INDEX_BARRELS_PATH = os.path.join(PROJECT_PATH, "storage/inverted_index_barrels")
 
 
