@@ -25,7 +25,7 @@ class ForwardIndex:
 		used by methods inside it.
 		"""
 		self.path = path
-		self.lexicon = lexicon
+		self.lexicon_dict = lexicon_dict
 
 
 	def add_to_forward_index(self, doc_paths):
