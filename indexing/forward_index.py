@@ -23,6 +23,9 @@ class ForwardIndex:
 
     """
 
+    stop_words = set(nltk.corpus.stopwords.words('english'))
+    stemmer = nltk.stem.PorterStemmer()
+
     def __init__(self, path, lexicon_dict):
         """
         The initializer gets the absolute path to the directory 
@@ -48,9 +51,8 @@ class ForwardIndex:
         """
         fi_dict = {}
         for path in doc_paths:
-            with open(path) as json_file:
+            with open(path, encoding="utf8") as json_file:
                 document = json.load(json_file)  # reading json in document
-            json_file.close()
 
             # Extracting doc_id
             document_id = os.path.splitext(ntpath.basename(path))[0]
@@ -62,19 +64,17 @@ class ForwardIndex:
             text_tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in text_tokens]
 
             # Removing stop words
-            stop_words = set(nltk.corpus.stopwords.words('english'))
-            text_tokens = [x for x in text_tokens if not x in stop_words]
+            text_tokens = [x for x in text_tokens if not x in self.stop_words]
 
             # Stemming words
-            stemmer = nltk.stem.PorterStemmer()
-            text_tokens = [stemmer.stem(x) for x in text_tokens]
+            text_tokens = [self.stemmer.stem(x) for x in text_tokens]
 
             word_id = {}
 
             # Getting word_id and appearances
             position = 1
             for word in text_tokens:
-                if word is not '':
+                if word != '':
                     key = self.lexicon_dict[word]
                     if key in word_id:
                         word_id[key].append(position)
@@ -88,7 +88,8 @@ class ForwardIndex:
         pickle_path = os.path.join(self.path, file_name)
         with open(pickle_path, 'wb') as file:
             pickle.dump(fi_dict, file)
-        file.close()
+
+        return pickle_path
 
 
     def get_forward_index_files(self):

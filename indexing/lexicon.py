@@ -50,7 +50,7 @@ class Lexicon:
     def generate_lexicon(self, doc_paths):
         """
         parameters:
-        doc_paths - list of document paths from which
+        doc_paths - generator of document paths from which
         to generate new lexicon.
         Store this lexicon at self.path. If a lexicon
         already exists there replace it.
@@ -62,7 +62,7 @@ class Lexicon:
         lexicon = self.lexicon
 
         for path in doc_paths:
-            with open(path) as json_file:
+            with open(path, encoding="utf8") as json_file:
                 document = json.load(json_file)  # reading json in document
             json_file.close()
 
@@ -86,11 +86,11 @@ class Lexicon:
             title_tokens = [stemmer.stem(x) for x in title_tokens]
 
             for x in title_tokens:
-                if x is not '' and x not in lexicon:
+                if x != '' and x not in lexicon:
                     lexicon[x] = len(lexicon) + 1
 
             for x in text_tokens:
-                if x is not '' and x not in lexicon:
+                if x != '' and x not in lexicon:
                     lexicon[x] = len(lexicon) + 1
 
         # Storing the lexicon

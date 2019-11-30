@@ -1,7 +1,6 @@
-import unittest
-from unit_tests.test_inverted_index import TestInverteIndex
-from unit_tests import forward_index_tests
+from generators import generate_lexicon, generate_forward_index
 
-if __name__ == '__main__':
-  forward_index_tests.main()
-  #unittest.main()
+
+# generate_lexicon.main()
+generate_forward_index.main()
+# generate_inverted_index.main()
