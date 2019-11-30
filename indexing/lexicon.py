@@ -7,37 +7,37 @@ import re
 
 class Lexicon:
     """
-	The lexicon is a dictionary of the form:
+    The lexicon is a dictionary of the form:
 
-	lexicon = {
-		cat: 1,
-		dog: 2,
-		snake: 3,
-		.
-		.
-		.
-	}
+    lexicon = {
+        cat: 1,
+        dog: 2,
+        snake: 3,
+        .
+        .
+        .
+    }
 
-	"""
+    """
 
     def __init__(self, path):
         """
-		The constructor gets absolute path to pickle
-		storing the dictionary of the lexicon
-		"""
+        The constructor gets absolute path to pickle
+        storing the dictionary of the lexicon
+        """
         self.path = path
         self.lexicon = self.load_lexicon()
 
     def load_lexicon(self):
         """
-		parameters: none
+        parameters: none
 
-		This method is called by the constructor to
-		load any existing dictionary pickle. If no such
-		pickle exists create a new one.
+        This method is called by the constructor to
+        load any existing dictionary pickle. If no such
+        pickle exists create a new one.
 
-		return: dictionary
-		"""
+        return: dictionary
+        """
         lexicon = {}  # Empty Dictionary
         try:
             pickle_file = open(self.path, 'rb')
@@ -53,20 +53,20 @@ class Lexicon:
 
     def generate_lexicon(self, doc_paths):
         """
-		parameters:
-		doc_paths - list of document paths from which
-		to generate new lexicon.
+        parameters:
+        doc_paths - list of document paths from which
+        to generate new lexicon.
 
-		Store this lexicon at self.path. If a lexicon
-		already exists there replace it.
+        Store this lexicon at self.path. If a lexicon
+        already exists there replace it.
 
-		Use NLTK to tokenize and stem words and also
-		remove stop words.
+        Use NLTK to tokenize and stem words and also
+        remove stop words.
 
-		https://www.nltk.org/
+        https://www.nltk.org/
 
-		return: void
-		"""
+        return: void
+        """
         for path in doc_paths:
             with open(path) as json_file:
                 document = json.load(json_file)  # reading json in document
@@ -80,52 +80,52 @@ class Lexicon:
 
     def update_lexicon(self, doc_paths):
         """
-		parameters:
+        parameters:
 
-		doc_paths - list of new documents added to
-		system.
+        doc_paths - list of new documents added to
+        system.
 
-		Append new words found in these
-		documents to existing lexicon.
+        Append new words found in these
+        documents to existing lexicon.
 
-		return: void
-		"""
+        return: void
+        """
         pass
 
     def get_lexicon_dict(self):
         """
-		parameters: none
+        parameters: none
 
-		return: dictionary
-		"""
+        return: dictionary
+        """
         pass
 
     def get_word_id(self, word):
         """
-		parameters: word
+        parameters: word
 
-		Search word in self.dictionary and return
-		its wordID. If the word does not exist 
-		return -1
+        Search word in self.dictionary and return
+        its wordID. If the word does not exist 
+        return -1
 
-		return: void
-		"""
+        return: void
+        """
         pass
 
     def check_word_exists(self, word):
         """
-		parameters: word
+        parameters: word
 
-		Search word in lexicon.
+        Search word in lexicon.
 
-		return: boolean
+        return: boolean
 
-		"""
+        """
 
     def __len__(self):
         """
-		magic method
+        magic method
 
-		return len of lexicon.
-		"""
+        return len of lexicon.
+        """
         pass
