@@ -28,7 +28,7 @@ class ForwardIndex:
         self.lexicon_dict = lexicon_dict
 
 
-    def add_to_forward_index(self, doc_paths):
+    def add_to_forward_index(self, doc_paths, file_name):
         """
         parameters: doc_paths - list of document paths. These need
         to be parsed and their words need to be added to a new dictionary
