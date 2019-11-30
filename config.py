@@ -16,3 +16,5 @@ def dataset_files(batches_start=None, batches_end=None):
 	for batch in os.listdir(DATASET_PATH)[batches_start:batches_end]:
 		for file_path in os.listdir(os.path.join(DATASET_PATH, batch)):
 			yield file_path
+
+

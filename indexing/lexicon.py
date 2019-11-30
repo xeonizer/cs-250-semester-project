@@ -15,7 +15,7 @@ class Lexicon:
 
 	def __init__(self, path):
 		"""
-		The constructor gets absolute path to pickle 
+		The initializer gets absolute path to pickle 
 		storing the dictionary of the lexicon
 		"""
 		self.path = path
@@ -26,11 +26,11 @@ class Lexicon:
 		"""
 		parameters: none
 		
-		This method is called by the constructor to
+		This method is called by the initializer to
 		load any existing dictionary pickle. If no such
 		pickle exists create a new one.
 
-		return: dictionary 
+		return: dictionary
 		"""
 		pass
 

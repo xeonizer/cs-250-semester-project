@@ -12,16 +12,16 @@ class ForwardIndex:
 	}
 
 	The set of these dictionaries is stored in a directory
-	as pickles of which the path is given to the constructor.
+	as pickles of which the path is given to the initializer.
 
 	"""
 
 	def __init__(self, path, lexicon_dict):
 		"""
-		The constructor gets the absolute path to the directory 
+		The initializer gets the absolute path to the directory 
 		which holds all the pickles of the forward index.
 
-		The constuctor also gets the lexicon dictionary which is
+		The initializer also gets the lexicon dictionary which is
 		used by methods inside it.
 		"""
 		self.path = path

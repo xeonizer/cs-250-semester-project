@@ -1,3 +1,8 @@
+import pickle
+import os
+import ntpath
+
+
 class InvertedIndex:
 	"""
 	The inverted index is a set of dictionaries of the form:
@@ -34,12 +39,16 @@ class InvertedIndex:
 
 	"""
 
+	LEXICON_SIZE = 100 # TODO: get this value from Lexicon
+	INVERTED_INDEX_BARREL_SIZE = 10 # DO NOT CHANGE THIS
+
+
 	def __init__(self, path, temp_path):
 		"""
-		The constructor gets the absolute path to the direcotry
+		The initializer gets the absolute path to the direcotry
 		which holds all the barrels for the inverted index.
 
-		The constructor also gets the path to the temp folder where
+		The initializer also gets the path to the temp folder where
 		it stores inverted indexes when they are first created. This
 		is done to cater for multi threaded execution which will lead
 		to multiple files storing inverted index for the same range
@@ -61,17 +70,36 @@ class InvertedIndex:
 
 		This method expects to be called by multiple threads.
 		"""
-		pass
+		with open(forward_index_path, 'rb') as forward_index_file:
+			forward_index = pickle.load(forward_index_file)
+			inverted_indexes = [{} for i in range(self.LEXICON_SIZE // self.INVERTED_INDEX_BARREL_SIZE)]
+
+			for document in forward_index:
+				for word_id in forward_index[document]:
+
+					# Find concerned barrel
+					barrel_index = word_id // self.INVERTED_INDEX_BARREL_SIZE
+
+					if word_id in inverted_indexes[barrel_index]:
+						inverted_indexes[barrel_index][word_id].append(document)
+					else:
+						inverted_indexes[barrel_index][word_id] = [document]
+
+			# Saving inverted index barrels which are not empty
+			for i, inverted_index_barrel in enumerate(inverted_indexes):
+				if not len(inverted_index_barrel) == 0:
+					filename = f"{i:03}_{ntpath.basename(forward_index_path)}"
+					with open(os.path.join(self.temp_path, filename), 'wb+') as inverted_index_file:
+						pickle.dump(inverted_index_barrel, inverted_index_file)
 
 	
-	@classmethod
-	def merge_buckets(cls):
+	def merge_buckets(self):
 		"""
-		Merge the temporary inverted indexes in self.temp_path and save
-		them in self.path.
+		Merge the temporary inverted indexes in self.temp_path with
+		the inverted index in self.path and save them.
 
 		This function expects to be called by the main thread.
 		"""
-		pass
+		
 
 
