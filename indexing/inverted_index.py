@@ -38,13 +38,7 @@ class InvertedIndex:
         .
 
     """
-
-    LEXICON_SIZE = 100 # TODO: get this value from Lexicon
-    INVERTED_INDEX_BARREL_SIZE = 10 # DO NOT CHANGE THIS
-    NUM_BARRELS = LEXICON_SIZE // INVERTED_INDEX_BARREL_SIZE
-
-
-    def __init__(self, path, temp_path):
+    def __init__(self, path, temp_path, lexicon_size, barrel_size):
         """
         The initializer gets the absolute path to the direcotry
         which holds all the barrels for the inverted index.
@@ -57,6 +51,8 @@ class InvertedIndex:
         """
         self.path = path
         self.temp_path = temp_path
+        self.lexicon_size = lexicon_size
+        self.barrel_size = barrel_size
 
 
     def invert_forward_index(self, forward_index_path):
@@ -73,13 +69,13 @@ class InvertedIndex:
         """
         with open(forward_index_path, 'rb') as forward_index_file:
             forward_index = pickle.load(forward_index_file)
-            inverted_indexes = [{} for i in range(self.LEXICON_SIZE // self.INVERTED_INDEX_BARREL_SIZE)]
+            inverted_indexes = [{} for i in range(self.lexicon_size // self.barrel_size + 1)]
 
             for document in forward_index:
                 for word_id in forward_index[document]:
 
                     # Find concerned barrel
-                    barrel_index = word_id // self.INVERTED_INDEX_BARREL_SIZE
+                    barrel_index = word_id // self.barrel_size
 
                     if word_id in inverted_indexes[barrel_index]:
                         inverted_indexes[barrel_index][word_id].append(document)
@@ -89,9 +85,11 @@ class InvertedIndex:
             # Saving inverted index barrels which are not empty
             for i, inverted_index_barrel in enumerate(inverted_indexes):
                 if not len(inverted_index_barrel) == 0:
-                    filename = f"{i:03}_inverted_{ntpath.basename(forward_index_path)}"
-                    with open(os.path.join(self.temp_path, filename), 'wb+') as inverted_index_file:
+                    filename = os.path.join(self.temp_path, f"{i:03}_inverted_{ntpath.basename(forward_index_path)}")
+                    with open(filename, 'wb+') as inverted_index_file:
                         pickle.dump(inverted_index_barrel, inverted_index_file)
+
+        return filename
 
     
     def merge_buckets(self):
@@ -103,7 +101,7 @@ class InvertedIndex:
         """
         temp_inverted_indexes = os.listdir(self.temp_path)
 
-        for i in range(self.NUM_BARRELS):
+        for i in range(self.lexicon_size // self.barrel_size + 1):
             concerned_indexes = [temp_index for temp_index in temp_inverted_indexes if temp_index.startswith(f"{i:03}_inverted_")]
             
             # If for i'th barrel no temp indexes exist continue
