@@ -41,6 +41,7 @@ class InvertedIndex:
 
 	LEXICON_SIZE = 100 # TODO: get this value from Lexicon
 	INVERTED_INDEX_BARREL_SIZE = 10 # DO NOT CHANGE THIS
+	NUM_BARRELS = LEXICON_SIZE // INVERTED_INDEX_BARREL_SIZE
 
 
 	def __init__(self, path, temp_path):
@@ -88,7 +89,7 @@ class InvertedIndex:
 			# Saving inverted index barrels which are not empty
 			for i, inverted_index_barrel in enumerate(inverted_indexes):
 				if not len(inverted_index_barrel) == 0:
-					filename = f"{i:03}_{ntpath.basename(forward_index_path)}"
+					filename = f"{i:03}_inverted_{ntpath.basename(forward_index_path)}"
 					with open(os.path.join(self.temp_path, filename), 'wb+') as inverted_index_file:
 						pickle.dump(inverted_index_barrel, inverted_index_file)
 
@@ -100,6 +101,38 @@ class InvertedIndex:
 
 		This function expects to be called by the main thread.
 		"""
-		
+
+		# Creating inverted index bucket if it does not already exist
+		# for i in range(self.NUM_BARRELS):
+		# 	filename = os.path.join(self.path, f"{i:03}_inverted")
+		# 	if not os.path.exists(filename):
+		# 		with open(filename, 'wb+') as inverted_index_file:
+		# 			pickle.dump({}, inverted_index_file)
+
+
+		temp_inverted_indexes = os.listdir(self.temp_path)
+
+		for i in range(self.NUM_BARRELS):
+			concerned_indexes = [temp_index for temp_index in temp_inverted_indexes if temp_index.startswith(f"{i:03}_inverted_")]
+			
+			if not len(concerned_indexes): continue
+
+			filename = os.path.join(self.path, f"{i:03}_inverted")
+			if not os.path.exists(filename):
+				inverted_index = {}
+			else:
+				with open(filename, 'rb') as inverted_index_file:
+					inverted_index = pickle.load(inverted_index_file)
+
+			for concerned_index in concerned_indexes:
+				with open(os.path.join(self.temp_path, concerned_index), 'rb') as temp_index_file:
+					temp_index = pickle.load(temp_index_file)
+					for word_id in temp_index:
+						if word_id in inverted_index:
+							inverted_index[word_id] += temp_index[word_id]
+						else:
+								inverted_index[word_id] = temp_index[word_id]
+			with open (filename, 'wb') as inverted_index_file:
+				pickle.dump(inverted_index, inverted_index_file)
 
 
