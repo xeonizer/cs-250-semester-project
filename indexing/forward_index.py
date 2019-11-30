@@ -1,3 +1,10 @@
+import json
+import ntpath
+import os
+import nltk
+import re
+import pickle
+
 class ForwardIndex:
     """
     The forward index is a set of dictionaries of the form:
@@ -39,7 +46,49 @@ class ForwardIndex:
 
         return: void
         """
-        pass
+        fi_dict = {}
+        for path in doc_paths:
+            with open(path) as json_file:
+                document = json.load(json_file)  # reading json in document
+            json_file.close()
+
+            # Extracting doc_id
+            document_id = os.path.splitext(ntpath.basename(path))[0]
+
+            text_tokens = nltk.word_tokenize(document['text'])
+
+            # Removing URLs, numbers and punctuations
+            text_tokens = [re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE) for x in text_tokens]
+            text_tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in text_tokens]
+
+            # Removing stop words
+            stop_words = set(nltk.corpus.stopwords.words('english'))
+            text_tokens = [x for x in text_tokens if not x in stop_words]
+
+            # Stemming words
+            stemmer = nltk.stem.PorterStemmer()
+            text_tokens = [stemmer.stem(x) for x in text_tokens]
+
+            word_id = {}
+
+            # Getting word_id and appearances
+            position = 1
+            for word in text_tokens:
+                if word is not '':
+                    key = self.lexicon_dict[word]
+                    if key in word_id:
+                        word_id[key].append(position)
+                    else:
+                        word_id[key] = [position]
+                    position = position + 1
+
+            fi_dict[document_id] = word_id
+
+        # Saving the forward_index barrel as pickle
+        pickle_path = os.path.join(self.path, file_name)
+        with open(pickle_path, 'wb') as file:
+            pickle.dump(fi_dict, file)
+        file.close()
 
 
     def get_forward_index_files(self):
