@@ -9,7 +9,7 @@ def main():
     lexicon_dict = Lexicon(config.LEXICON_PATH).get_lexicon_dict()
     forward_index = ForwardIndex(config.FORWARD_INDEX_BARRELS_PATH, lexicon_dict)
     
-    # forward_index.add_to_forward_index(list(config.dataset_files(0,1)))
+    forward_index.add_to_forward_index(list(config.dataset_files(0,1)), 'aftab_test_forward_1')
     # forward_index.add_to_forward_index(list(config.dataset_files(1,2)))
 
     # forward_index_files = forward_index.get_forward_index_files()
