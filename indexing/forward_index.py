@@ -92,6 +92,8 @@ class ForwardIndex:
         return pickle_path
 
 
+    # TODO: For search these functions in this module will be needed
+
     def get_forward_index_files(self):
         """
         parameters: none
