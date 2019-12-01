@@ -1,4 +1,5 @@
 import os
+import pickle
 import config
 from indexing.inverted_index import InvertedIndex
 from indexing.lexicon import Lexicon
@@ -18,3 +19,23 @@ def main():
 			print(f"{f.result()} created.")
 
 		inverted_index.merge_buckets()
+
+	print('-'*32)
+
+	PRINT_BARREL = 6
+	PRINT_N = 2
+
+	### DEMO PRINTING ###
+	print("### DEMO TEST ###")
+	print(f"{PRINT_N} entries from barrel {PRINT_BARREL}:")
+
+	with open(os.path.join(config.INVERTED_INDEX_BARRELS_PATH, f"{PRINT_BARREL:03}_inverted"), 'rb') as inverted_index_file:
+		inverted_index = pickle.load(inverted_index_file)
+
+		for i, word_id in enumerate(inverted_index):
+			if i >= PRINT_N: break
+
+			print(f"\t{word_id}:")
+
+			for doc_id in inverted_index[word_id]:
+				print(f"\t\t{doc_id}")	

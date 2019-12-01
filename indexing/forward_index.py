@@ -74,7 +74,7 @@ class ForwardIndex:
             # Getting word_id and appearances
             position = 1
             for word in text_tokens:
-                if word != '':
+                if word != '' and word in self.lexicon_dict:
                     key = self.lexicon_dict[word]
                     if key in word_id:
                         word_id[key].append(position)

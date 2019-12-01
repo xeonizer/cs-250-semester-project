@@ -1,3 +1,6 @@
+# TODO: Write tests using python's unittest module
+
+
 import os
 import config
 from indexing.forward_index import ForwardIndex

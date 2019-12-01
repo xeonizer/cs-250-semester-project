@@ -1,3 +1,6 @@
+# TODO: Write tests using python's unittest module
+
+
 import config
 from indexing.lexicon import Lexicon
 
