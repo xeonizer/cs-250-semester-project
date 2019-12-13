@@ -9,7 +9,9 @@ from indexing.lexicon import Lexicon
 class TestInverteIndex(unittest.TestCase):
 
     def setUp(self):
-        self.inverted_index = InvertedIndex(config.INVERTED_INDEX_BARRELS_PATH, config.INVERTED_INDEX_BARRELS_TEMP_PATH)
+        lexicon = Lexicon(config.LEXICON_PATH)
+
+        self.inverted_index = InvertedIndex(config.INVERTED_INDEX_BARRELS_PATH, config.INVERTED_INDEX_BARRELS_TEMP_PATH, len(lexicon), config.INVERTED_INDEX_BARREL_SIZE)
 
         test_forward_index_1 = {
             "blog_0000001": [1, 47, 32, 18],
