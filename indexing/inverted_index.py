@@ -78,9 +78,9 @@ class InvertedIndex:
                     barrel_index = word_id // self.barrel_size
 
                     if word_id in inverted_indexes[barrel_index]:
-                        inverted_indexes[barrel_index][word_id].append(document)
+                        inverted_indexes[barrel_index][word_id].append({document: forward_index[document][word_id]})
                     else:
-                        inverted_indexes[barrel_index][word_id] = [document]
+                        inverted_indexes[barrel_index][word_id] = [{document: forward_index[document][word_id]}]
 
             # Saving inverted index barrels which are not empty
             for i, inverted_index_barrel in enumerate(inverted_indexes):
@@ -119,6 +119,7 @@ class InvertedIndex:
                 with open(os.path.join(self.temp_path, concerned_index), 'rb') as temp_index_file:
                     temp_index = pickle.load(temp_index_file)
                     for word_id in temp_index:
+                        # TODO: What if temp_index[word_id] i.e. that document and its hit list already exists?? 
                         if word_id in inverted_index:
                             inverted_index[word_id] += temp_index[word_id]
                         else:

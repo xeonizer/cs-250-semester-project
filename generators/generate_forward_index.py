@@ -31,7 +31,6 @@ def main():
 	with open(os.path.join(config.FORWARD_INDEX_BARRELS_PATH, f"batch_00{PRINT_BARREL}"), 'rb') as forward_index_file:
 		forward_index = pickle.load(forward_index_file)
 
-
 		for i, doc_id in enumerate(forward_index):
 
 			if i >= PRINT_N: break

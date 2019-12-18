@@ -1,8 +1,8 @@
-import pickle
 import os
+import pickle
+import re
 import json
 import nltk
-import re
 
 
 class Lexicon:

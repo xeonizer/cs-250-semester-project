@@ -37,5 +37,5 @@ def main():
 
 			print(f"\t{word_id}:")
 
-			for doc_id in inverted_index[word_id]:
-				print(f"\t\t{doc_id}")	
+			for doc in inverted_index[word_id]:
+				print(f"\t\t{doc}")	
