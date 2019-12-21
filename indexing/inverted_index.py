@@ -77,10 +77,14 @@ class InvertedIndex:
                     # Find concerned barrel
                     barrel_index = word_id // self.barrel_size
 
+                    # inverted_indexes[barrel_index][word_id][document] = forward_index[document][word_id]
+
                     if word_id in inverted_indexes[barrel_index]:
-                        inverted_indexes[barrel_index][word_id].append({document: forward_index[document][word_id]})
+                        inverted_indexes[barrel_index][word_id][document] = forward_index[document][word_id]
+                        # inverted_indexes[barrel_index][word_id].append({document: forward_index[document][word_id]})
                     else:
-                        inverted_indexes[barrel_index][word_id] = [{document: forward_index[document][word_id]}]
+                        inverted_indexes[barrel_index][word_id] = { document: forward_index[document][word_id] }
+                        # inverted_indexes[barrel_index][word_id] = [{document: forward_index[document][word_id]}]
 
             # Saving inverted index barrels which are not empty
             for i, inverted_index_barrel in enumerate(inverted_indexes):
@@ -121,7 +125,7 @@ class InvertedIndex:
                     for word_id in temp_index:
                         # TODO: What if temp_index[word_id] i.e. that document and its hit list already exists?? 
                         if word_id in inverted_index:
-                            inverted_index[word_id] += temp_index[word_id]
+                            inverted_index[word_id].update(temp_index[word_id])
                         else:
                             inverted_index[word_id] = temp_index[word_id]
 
@@ -133,3 +137,22 @@ class InvertedIndex:
                 pickle.dump(inverted_index, inverted_index_file)
 
 
+    def retrieve(self, word_id):
+        """
+        parameters: word_id - Word id for which to return inverted_index
+
+        return: list of documents and the hitlists for that word_id
+        """
+
+        # Find concerned barrel
+        # TODO: What if barrel does not exist
+        barrel_index = word_id // self.barrel_size
+        filename = os.path.join(self.path, f"{barrel_index:03}_inverted")
+
+        with open(filename, 'rb') as inverted_index_file:
+            inverted_index = pickle.load(inverted_index_file)
+
+            if word_id in inverted_index:
+                return inverted_index[word_id]
+
+        return None

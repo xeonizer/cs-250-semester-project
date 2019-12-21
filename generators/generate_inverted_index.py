@@ -22,8 +22,8 @@ def main():
 
 	print('-'*32)
 
-	PRINT_BARREL = 6
-	PRINT_N = 2
+	PRINT_BARREL = 3
+	PRINT_N = 30
 
 	### DEMO PRINTING ###
 	print("### DEMO TEST ###")
@@ -38,4 +38,4 @@ def main():
 			print(f"\t{word_id}:")
 
 			for doc in inverted_index[word_id]:
-				print(f"\t\t{doc}")	
+				print(f"\t\t{doc}: {inverted_index[word_id][doc]}")

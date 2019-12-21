@@ -82,6 +82,7 @@ class ForwardIndex:
                         word_id[key] = [position]
                     position = position + 1
 
+            # TODO: Assign a better document id
             fi_dict[document_id] = word_id
 
         # Saving the forward_index barrel as pickle

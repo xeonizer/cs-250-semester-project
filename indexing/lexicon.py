@@ -18,6 +18,9 @@ class Lexicon:
     }
     """
 
+    stop_words = set(nltk.corpus.stopwords.words('english'))
+    stemmer = nltk.stem.PorterStemmer()
+
     def __init__(self, path):
         """
         The constructor gets absolute path to pickle
@@ -25,6 +28,7 @@ class Lexicon:
         """
         self.path = path
         self.lexicon = self.load_lexicon()
+
 
     def load_lexicon(self):
         """
@@ -47,6 +51,7 @@ class Lexicon:
 
         return lexicon
 
+
     def generate_lexicon(self, doc_paths):
         """
         parameters:
@@ -66,24 +71,8 @@ class Lexicon:
                 document = json.load(json_file)  # reading json in document
             json_file.close()
 
-            title_tokens = nltk.word_tokenize(document['title'])
-            text_tokens = nltk.word_tokenize(document['text'])
-
-            # Removing URLs, numbers and punctuations
-            text_tokens = [re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE) for x in text_tokens]
-            text_tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in text_tokens]
-            title_tokens = [re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE) for x in title_tokens]
-            title_tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in title_tokens]
-
-            # Removing stop words
-            stop_words = set(nltk.corpus.stopwords.words('english'))
-            text_tokens = [x for x in text_tokens if not x in stop_words]
-            title_tokens = [x for x in title_tokens if not x in stop_words]
-
-            # Stemming words
-            stemmer = nltk.stem.PorterStemmer()
-            text_tokens = [stemmer.stem(x) for x in text_tokens]
-            title_tokens = [stemmer.stem(x) for x in title_tokens]
+            title_tokens = self.tokenize(document['title'])
+            text_tokens = self.tokenize(document['text'])
 
             for x in title_tokens:
                 if x != '' and x not in lexicon:
@@ -99,6 +88,27 @@ class Lexicon:
         file.close()
 
 
+    def tokenize(self, words):
+        """
+        parameters: string - the word to clean
+        return: that tokens after being processed by the stemmer and stop words removed
+        """
+
+        tokens = nltk.word_tokenize(words)
+        
+        # Removing URLs, numbers and punctuations
+        tokens = [re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE) for x in tokens]
+        tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in tokens]
+
+        # Removing stop words
+        tokens = [x for x in tokens if not x in self.stop_words]
+
+        # Stemming words 
+        tokens = [self.stemmer.stem(x) for x in tokens]
+
+        return tokens
+
+
     def get_lexicon_dict(self):
         """
         parameters: none
@@ -109,6 +119,7 @@ class Lexicon:
         lexicon = pickle.load(pickle_file)
         pickle_file.close()
         return lexicon
+
 
     def get_word_id(self, word):
         """
