@@ -4,6 +4,7 @@ import os
 import nltk
 import re
 import pickle
+from tqdm import tqdm
 
 class ForwardIndex:
     """
@@ -26,7 +27,7 @@ class ForwardIndex:
     stop_words = set(nltk.corpus.stopwords.words('english'))
     stemmer = nltk.stem.PorterStemmer()
 
-    def __init__(self, path, lexicon_dict):
+    def __init__(self, path, lexicon):
         """
         The initializer gets the absolute path to the directory 
         which holds all the pickles of the forward index.
@@ -35,7 +36,7 @@ class ForwardIndex:
         used by methods inside it.
         """
         self.path = path
-        self.lexicon_dict = lexicon_dict
+        self.lexicon = lexicon
 
 
     def add_to_forward_index(self, doc_paths, file_name):
@@ -50,7 +51,7 @@ class ForwardIndex:
         return: void
         """
         fi_dict = {}
-        for path in doc_paths:
+        for path in tqdm(doc_paths):
             with open(path, encoding="utf8") as json_file:
                 document = json.load(json_file)  # reading json in document
 
@@ -74,8 +75,8 @@ class ForwardIndex:
             # Getting word_id and appearances
             position = 1
             for word in text_tokens:
-                if word != '' and word in self.lexicon_dict:
-                    key = self.lexicon_dict[word]
+                if word != '' and self.lexicon.exists(word):
+                    key = self.lexicon.get_word_id(word)
                     if key in word_id:
                         word_id[key].append(position)
                     else:
@@ -91,23 +92,3 @@ class ForwardIndex:
             pickle.dump(fi_dict, file)
 
         return pickle_path
-
-
-    # TODO: For search these functions in this module will be needed
-
-    def get_forward_index_files(self):
-        """
-        parameters: none
-        return: Return the list of files(pickles) in forward index
-        directors a.k.a the barrels
-        """
-        pass
-
-
-    def traverse_forward_index(self, path):
-        """
-        parameters: path to the pickle
-        GENERATOR FUNCTION - yeilds tuple of the form:
-        ("docID", "word", "<HitList>")
-        """
-        pass

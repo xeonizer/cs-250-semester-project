@@ -9,8 +9,8 @@ from indexing.lexicon import Lexicon
 # THESE TESTS CAN ONLY RUN AFTER LEXICON HAS BEEN IMPLEMENTED
 
 def main():
-    lexicon_dict = Lexicon(config.LEXICON_PATH).get_lexicon_dict()
-    forward_index = ForwardIndex(config.FORWARD_INDEX_BARRELS_PATH, lexicon_dict)
+    lexicon = Lexicon(config.LEXICON_PATH)
+    forward_index = ForwardIndex(config.FORWARD_INDEX_BARRELS_PATH, lexicon)
     
     forward_index.add_to_forward_index(list(config.dataset_files(0,1)), 'aftab_test_forward_1')
     # forward_index.add_to_forward_index(list(config.dataset_files(1,2)))

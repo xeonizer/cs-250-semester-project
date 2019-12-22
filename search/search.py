@@ -5,9 +5,10 @@ class Search:
 		self.inverted_index = inverted_index
 
 
-	def search(self, query):
+	def search(self, query, n=10):
+
 		search_word_ids = [self.lexicon.get_word_id(word) for word in self.lexicon.tokenize(query)]
-		inverted_index_entries = [self.inverted_index.retrieve(word_id) for word_id in search_word_ids]
+		inverted_index_entries = [self.inverted_index.retrieve(word_id) for word_id in search_word_ids if word_id != -1]
 
 		docs_with_score = []
 
@@ -20,16 +21,12 @@ class Search:
 						del remaining_iie[doc]
 				
 				docs_with_score.append((doc, self.query_relavence_score(current_doc_hitlists)))
-				# print(doc)
-				# print(docs_with_score[-1])
-				# print(current_doc_hitlists)
-				# print("--------")
+
 
 		sorted(docs_with_score, key=lambda x: x[1])
 		docs_with_score.sort(key=lambda x: x[1], reverse=True)
 
-		for doc in docs_with_score:
-			print(doc)
+		return docs_with_score[:n]
 
 
 	def query_relavence_score(self, hitlists):
@@ -60,10 +57,10 @@ class Search:
 		prev_hit = joined_hits[0]
 
 		for hit in joined_hits[1:]:
-			score += 2
+			score += 1
 			if hit[0] != prev_hit[0]: 
 				dist = hit[1] - prev_hit[1]
-				score += 10 / (dist + 1)
+				score += 100 / (dist + 1)
 			prev_hit = hit
 
 		return score

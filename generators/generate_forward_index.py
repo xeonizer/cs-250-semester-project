@@ -6,25 +6,38 @@ from indexing.lexicon import Lexicon
 import concurrent.futures
 
 
-def main():
+def main(batch_start, batch_end, demo=False):
 
-	lexicon_dict = Lexicon(config.LEXICON_PATH).get_lexicon_dict()
+	lexicon = Lexicon(config.LEXICON_PATH)
 
-	forward_index = ForwardIndex(config.FORWARD_INDEX_BARRELS_PATH, lexicon_dict)
+	forward_index = ForwardIndex(config.FORWARD_INDEX_BARRELS_PATH, lexicon)
 
 	with concurrent.futures.ThreadPoolExecutor() as executor:
-		batch_1_thread = executor.submit(forward_index.add_to_forward_index, config.dataset_files(0,1), 'batch_001')
-		batch_2_thread = executor.submit(forward_index.add_to_forward_index, config.dataset_files(1,2), 'batch_002')
 
-		for f in concurrent.futures.as_completed([batch_1_thread, batch_2_thread]):
+		threads = []
+
+		if batch_start == batch_end:
+			batch_1_thread = executor.submit(forward_index.add_to_forward_index, config.dataset_files(batch_start, batch_start + 1), f"batch_00{batch_start}")
+			threads.append(batch_1_thread)
+		else:
+			mid = int((batch_end + batch_start) / 2)
+			batch_1_thread = executor.submit(forward_index.add_to_forward_index, config.dataset_files(batch_start, mid), f"batch_00{batch_start}")
+			batch_2_thread = executor.submit(forward_index.add_to_forward_index, config.dataset_files(mid, batch_end), f"batch_00{mid}")
+			threads.append(batch_1_thread)
+			threads.append(batch_2_thread)
+
+		for f in concurrent.futures.as_completed(threads):
 			print(f"{f.result()} forward_index created.")
+
+	if not demo: return
+	
+	### DEMO PRINTING ###
 
 	print('-'*32)
 
-	PRINT_BARREL = 1
+	PRINT_BARREL = 0
 	PRINT_N = 2
 
-	### DEMO PRINTING ###
 	print("### DEMO TEST ###")
 	print(f"{PRINT_N} entrie(s) from barrel {PRINT_BARREL}:")
 

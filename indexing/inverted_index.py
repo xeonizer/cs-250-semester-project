@@ -1,6 +1,7 @@
 import pickle
 import os
 import ntpath
+from tqdm import tqdm
 
 
 class InvertedIndex:
@@ -71,7 +72,7 @@ class InvertedIndex:
             forward_index = pickle.load(forward_index_file)
             inverted_indexes = [{} for i in range(self.lexicon_size // self.barrel_size + 1)]
 
-            for document in forward_index:
+            for document in tqdm(forward_index):
                 for word_id in forward_index[document]:
 
                     # Find concerned barrel
@@ -135,7 +136,7 @@ class InvertedIndex:
             # Save updated index
             with open (filename, 'wb') as inverted_index_file:
                 pickle.dump(inverted_index, inverted_index_file)
-
+                
 
     def retrieve(self, word_id):
         """

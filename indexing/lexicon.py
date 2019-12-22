@@ -3,6 +3,7 @@ import pickle
 import re
 import json
 import nltk
+from tqdm import tqdm
 
 
 class Lexicon:
@@ -66,7 +67,7 @@ class Lexicon:
         """
         lexicon = self.lexicon
 
-        for path in doc_paths:
+        for path in tqdm(doc_paths):
             with open(path, encoding="utf8") as json_file:
                 document = json.load(json_file)  # reading json in document
             json_file.close()
@@ -136,6 +137,10 @@ class Lexicon:
             return id
         except KeyError:
             return -1
+
+
+    def exists(self, word):
+        return self.get_word_id(word) != -1
 
 
     def __len__(self):
