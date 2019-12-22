@@ -1,5 +1,14 @@
 # Search Engine Project - DSA
-A search engine based on the paper [*The Anatomy of a Large-Scale Hypertextual Web Search Engine*](http://infolab.stanford.edu/~backrub/google.html) by Sergey Brin and Lawrence Page
+A search engine roughly based on the paper [*The Anatomy of a Large-Scale Hypertextual Web Search Engine*](http://infolab.stanford.edu/~backrub/google.html) by Sergey Brin and Lawrence Page
+
+## Group Members
+| Name                     | CMS ID |
+|--------------------------|--------|
+| A. Aftab Akhtar          | 244301 |
+| B. Usama Ahmed Siddiquie | 241886 |
+| C. Muhammad Ali          | 266079 |
+
+---
 
 ## Using this Repository
 
@@ -19,15 +28,46 @@ Type this in the python shell to get these
 import nltk
 nltk.download()
 ```
-#### Demo
-To demo indexing go to the run.py file. This is the file
-from which all other modules are called. There are 3 commented lines of code here.
-Uncomment each line one at a time and run. Each operation also prints some data to
-show what has been generated.
-If the index is already generated, it will be overwritten. To prevent this from
-happening every time we add a new documents, you have to create a new batch in
-the dataset folder and specify in the generator modules to just look at those. Then
-the indexing will only be done for those new documents.
+
+## Demo
+
+#### Live Server Demo
+To get a demo in the browser for the search engine, run the run_server.py file and go to the url provided in the CLI.
+
+#### CLI Demo (Detailed)
+To demo the workings of this project run run.py in the terminal. User the following commands to check different aspects of the project
+
+1. Lexicon creation/updating
+
+	```
+	run.py generate_lexicon --b_range=a,b --d=1
+	// a and b are the number of the starting and ending batch to update/create lexicon from.
+	// --d set to 1 prints some demo results
+	```
+
+2. Forward Index creation/update
+
+	```
+	run.py generate_forward_index --b_range=a,b --d=1
+	// a and b are the number of the starting and ending batch to update/create forward index.
+	// --d set to 1 prints some demo results
+	```
+
+3. Inverted Index creation/update
+
+	```
+	run.py generate_inverted_index --b=batch_00a,batch_00b --d=1
+	// a,b... are numbers of forward index batches to create inverted index from
+	// --d set to 1 prints some demo results
+	```
+
+4. Search
+
+	```
+	run.py search --q='query'
+	// query is the text to search
+	```
+
 
 ## Working
 __1. Generating Lexicon:__
@@ -52,6 +92,9 @@ threads in the demo.
 We have also chosen not to save the hit list with the inverted index as we can
 get that information during the search ranking from the forward index in
 constant time as well and save space.
+
+__4. Search:__
+Search works by tokenizing the search query and then looking in the inverted index to find all relevant documents. These documents are ranked by the number of hits and the proximity of those hits as they appear in the query.
 
 
 ## Unit Tests
