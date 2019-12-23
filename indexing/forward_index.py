@@ -59,16 +59,21 @@ class ForwardIndex:
             document_id = os.path.splitext(ntpath.basename(path))[0]
 
             text_tokens = nltk.word_tokenize(document['text'])
+            title_tokens = nltk.word_tokenize(document['title'])
+            text_tokens += title_tokens
 
             # Removing URLs, numbers and punctuations
             text_tokens = [re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE) for x in text_tokens]
             text_tokens = [re.sub(r'[^A-Za-z]+', '', x) for x in text_tokens]
 
+
             # Removing stop words
             text_tokens = [x for x in text_tokens if not x in self.stop_words]
 
+
             # Stemming words
             text_tokens = [self.stemmer.stem(x) for x in text_tokens]
+
 
             word_id = {}
 
